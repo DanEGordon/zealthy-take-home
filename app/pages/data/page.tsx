@@ -11,7 +11,7 @@ type User = {
   id: number;
 };
 
-const page = () => {
+const Data = () => {
   const [userList, setUserList] = useState<User[]>([]);
 
   useEffect(() => {
@@ -67,4 +67,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Data;
