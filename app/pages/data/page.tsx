@@ -1,15 +1,36 @@
 "use client";
 
-import React from "react";
-import prisma from "@/lib/prisma";
+import React, { useState, useEffect } from "react";
 
-const getUserData = async () => {
-  const userData = await prisma.userInfo.findMany();
-  return userData;
+type User = {
+  email: string;
+  password: string;
+  about: string;
+  address: string;
+  birthdate: string;
+  id: number;
 };
 
-const page = async () => {
-  const userInfo = await getUserData();
+const page = () => {
+  const [userList, setUserList] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/get-users");
+        const json = await response.json();
+        setUserList(json.results);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (userList.length === 0) {
+    return <div>Loading user data...</div>;
+  }
 
   return (
     <div>
@@ -25,7 +46,7 @@ const page = async () => {
           </tr>
         </thead>
         <tbody>
-          {userInfo.map((row) => (
+          {userList.map((row: User) => (
             <tr key={row.id}>
               <td className="border border-black max-w-64 p-2">
                 {row.password}
